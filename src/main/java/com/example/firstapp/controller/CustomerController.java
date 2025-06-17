@@ -3,9 +3,7 @@ package com.example.firstapp.controller;
 import com.example.firstapp.dao.CustomerDao;
 import com.example.firstapp.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,6 +39,11 @@ public class CustomerController {
     @GetMapping("customer/{addressId}")
     public List<Customer> getByAddressID(@PathVariable int addressId){
         return customerDao.getByAddressId(addressId);
+    }
+
+    @PostMapping("customer")
+    public Customer addCustomer(@RequestBody Customer customer){
+        return customerDao.addCustomer(customer);
     }
 
 
