@@ -16,7 +16,7 @@ public class DbConfiguration {
         String password = "root";
         dataSource.setUsername(userName);
         dataSource.setPassword(password);
-        dataSource.setUrl("jdbc:mysql://localhost:3306/northwind");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/sakila");
         return dataSource;
     }
 }

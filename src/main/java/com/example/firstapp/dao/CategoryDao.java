@@ -67,16 +67,20 @@ public class CategoryDao {
         String message = "Error";
         try (
                 Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Categories(CategoryId,CategoryName,Description) VALUES (?,?,?)");
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Categories(CategoryName,Description) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS);
 
                 ){
-            preparedStatement.setInt(1,category.getId());
-            preparedStatement.setString(2,category.getCategoryName());
-            preparedStatement.setString(3,category.getDescription());
+            preparedStatement.setString(1,category.getCategoryName());
+            preparedStatement.setString(2,category.getDescription());
 
             int affectRow = preparedStatement.executeUpdate();
             if (affectRow == 1){
                 message = "Successfully added!";
+            }
+
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()){
+                resultSet.next();
+                category.setId(resultSet.getInt(1));
             }
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -89,7 +93,7 @@ public class CategoryDao {
         try (
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Categories SET CategoryName = ?," +
-                        " Description = ? WHERE CategoryName = ?;")
+                        " Description = ? WHERE CategoryId = ?;")
                 ){
             preparedStatement.setString(1,category.getCategoryName());
             preparedStatement.setString(2,category.getDescription());
