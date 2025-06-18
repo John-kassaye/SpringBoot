@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DbConfiguration {
-    @B
+    @Bean
     public DataSource getDataSource(){
         BasicDataSource dataSource = new BasicDataSource();
         String userName = "root";
