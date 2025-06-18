@@ -20,7 +20,6 @@ public class CustomerDao {
 
     public List<Customer> getAll(){
         List<Customer> customers = new ArrayList<>();
-
         try(
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer");
@@ -45,7 +44,6 @@ public class CustomerDao {
 
     public List<Customer> getById(int id){
         List<Customer> customers = new ArrayList<>();
-
         try(
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer WHERE customer_id = ?;")
@@ -74,7 +72,6 @@ public class CustomerDao {
 
     public List<Customer> getByFirstName(String firstName){
         List<Customer> customers = new ArrayList<>();
-
         try(
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer WHERE first_name = ?;")
@@ -103,7 +100,6 @@ public class CustomerDao {
 
     public List<Customer> getByLastName(String lastName){
         List<Customer> customers = new ArrayList<>();
-
         try(
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer WHERE last_name = ?;")
@@ -132,7 +128,6 @@ public class CustomerDao {
 
     public List<Customer> getByAddressId(int addressID){
         List<Customer> customers = new ArrayList<>();
-
         try(
                 Connection connection = dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM customer WHERE address_id = ?;")
@@ -160,27 +155,6 @@ public class CustomerDao {
     }
 
     public Customer addCustomer(Customer customer){
-//        try (
-//                Connection connection = dataSource.getConnection();
-//                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO customer(store_id, first_name, last_name, email, address_id, active)," +
-//                        "VALUES(?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-//                ) {
-//            preparedStatement.setInt(1, customer.getId());
-//            preparedStatement.setString(2, customer.getFirstName());
-//            preparedStatement.setString(3, customer.getLastName());
-//            preparedStatement.setString(4, customer.getEmail());
-//            preparedStatement.setInt(5, customer.getAddressId());
-//            preparedStatement.setBoolean(6, customer.isActive());
-//            preparedStatement.executeUpdate();
-//
-//            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-//                resultSet.next();
-//                customer.setId(resultSet.getInt(1));
-//            }
-//        } catch (SQLException e){
-//            System.out.println(e.getMessage());
-//        }
-
         String query = "INSERT INTO customer(store_id, first_name, last_name, email, address_id, active) VALUES (?,?,?,?,?,?)";
         try(Connection connection = dataSource.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -191,14 +165,72 @@ public class CustomerDao {
             preparedStatement.setString(4, customer.getEmail());
             preparedStatement.setInt(5, customer.getAddressId());
             preparedStatement.setBoolean(6, customer.isActive());
-            preparedStatement.executeUpdate();
+
+            int affectedRow = preparedStatement.executeUpdate();
+
+            if (affectedRow == 1){
+                System.out.println("Customer" + customer + " added successfully!");
+            }
+
             try(ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
                 resultSet.next();
                 customer.setId(resultSet.getInt(1));
             }
+
+//            if (affectedRow == 1){
+//                try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+//                    if (resultSet.next()) {
+//                        customer.setId(resultSet.getInt(1));
+//                        System.out.println("Customer " + customer + " added with ID: " + customer.getId());
+//                    }
+//                }
+//            }
+
         } catch(SQLException e) {
             System.out.println(e.getMessage());
         }
         return customer;
+    }
+
+    public String updateCustomer(Customer customer , int id){
+        String message = "Error";
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE customer SET first_name = ? WHERE customer_id = ?")
+                ) {
+            preparedStatement.setString(1,customer.getFirstName());
+            preparedStatement.setInt(2,id);
+
+            int affectedRow = preparedStatement.executeUpdate();
+            if (affectedRow == 1){
+                message = "Updated successfully!";
+            }
+
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+        return message;
+    }
+
+    public String deleteCustomer(int id){
+        String message = "Error";
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM customer WHERE customer_id = ?");
+                ){
+
+            preparedStatement.setInt(1,id);
+
+            int rowAffected = preparedStatement.executeUpdate();
+            if (rowAffected == 1){
+                message = "Successfully deleted!";
+            }
+
+        } catch (SQLException e){
+            System.out.printf(e.getMessage());
+        }
+        return message;
     }
 }

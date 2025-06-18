@@ -31,7 +31,7 @@ public class CustomerController {
         return customerDao.getByFirstName(firstName);
     }
 
-    @GetMapping("lastNAme/{lastName}")
+    @GetMapping("lastName/{lastName}")
     public List<Customer> getByLastName(@PathVariable String lastName){
         return customerDao.getByLastName(lastName);
     }
@@ -46,5 +46,14 @@ public class CustomerController {
         return customerDao.addCustomer(customer);
     }
 
+    @PutMapping("customer/{id}")
+    public String updateCustomer(@PathVariable int id, @RequestBody Customer customer){
+        return customerDao.updateCustomer(customer, id);
+    }
+
+    @DeleteMapping("customerId/{id}")
+    public String deleteCustomer(@PathVariable int id){
+        return customerDao.deleteCustomer(id);
+    }
 
 }
