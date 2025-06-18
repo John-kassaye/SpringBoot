@@ -1,0 +1,16 @@
+# Java / Maven build output
+target/
+*.class
+
+# IntelliJ
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+# Sensitive config
+src/main/resources/application.properties
