@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DbConfiguration {
-@Bean
+    @B
     public DataSource getDataSource(){
         BasicDataSource dataSource = new BasicDataSource();
         String userName = "root";
@@ -17,7 +17,6 @@ public class DbConfiguration {
         dataSource.setUsername(userName);
         dataSource.setPassword(password);
         dataSource.setUrl("jdbc:mysql://localhost:3306/northwind");
-
         return dataSource;
     }
 }

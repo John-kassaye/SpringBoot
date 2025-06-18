@@ -9,7 +9,9 @@ import java.util.List;
 
 @RestController
 public class CategoryController {
+
     private CategoryDao categoryDao;
+
     @Autowired
     public CategoryController(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;

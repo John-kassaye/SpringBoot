@@ -5,15 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 @Component
 public class CategoryDao {
+
     private DataSource dataSource;
+
     @Autowired
     public CategoryDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -46,7 +45,7 @@ public class CategoryDao {
         Category category = null;
         try (
                 Connection connection = dataSource.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("SELECT FROM Categories WHERE CategoryId = ?")
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM Categories WHERE CategoryId = ?")
                 ){
             preparedStatement.setInt(1,id);
             try ( ResultSet resultSet = preparedStatement.executeQuery()){
